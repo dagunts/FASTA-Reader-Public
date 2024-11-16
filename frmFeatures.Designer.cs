@@ -199,7 +199,6 @@
             this.lblPos.Name = "lblPos";
             this.lblPos.Size = new System.Drawing.Size(634, 21);
             this.lblPos.TabIndex = 11;
-            this.lblPos.Text = "label4";
             // 
             // label3
             // 

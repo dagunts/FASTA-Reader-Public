@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon1.ico" />
+    <None Include="Resources\Wait.PNG" />
     <None Include="Resources\uni_prot.png" />
     <None Include="Resources\csv.png" />
     <None Include="Resources\analyze.png" />

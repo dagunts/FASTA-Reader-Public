@@ -23,11 +23,36 @@ namespace parser
         public frmMain()
         {
             InitializeComponent();
+            ShowWaitScreen(false);
         }
 
         string currentFile = string.Empty;
         StringBuilder sbFile = new StringBuilder();
         List<Protein> proteins = new List<Protein>();
+
+        public void ShowWaitScreen(bool bShow, string msg = "Please, wait...")
+        {
+            lblWait.Text = msg;
+            if (!bShow)
+            {
+                pnlWait.Parent = this;
+                pnlWait.Visible = false;
+                pnlWait.SendToBack();
+                Application.DoEvents();
+                return;
+            } else
+            {
+                pnlWait.Parent = this;
+                pnlWait.SendToBack();
+                pnlWait.Visible = true;
+                pnlWait.Top = (this.Height - pnlWait.Height) / 2;
+                pnlWait.Left = (this.Width - pnlWait.Width) / 2;
+                lblWait.Top = (pnlWait.Height - lblWait.Height) / 2;
+                lblWait.Left = (pnlWait.Width - lblWait.Width) / 2;
+                pnlWait.BringToFront();
+                Application.DoEvents();
+            }
+        }
 
         private void LoadFile(string file)
         {
@@ -132,7 +157,9 @@ namespace parser
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 Application.UseWaitCursor = true;
+                ShowWaitScreen(true);
                 LoadFile(openFileDialog1.FileName);
+                ShowWaitScreen(false);
                 Application.UseWaitCursor = false;
             }
 
@@ -204,6 +231,7 @@ namespace parser
 
             try
             {
+                ShowWaitScreen(true);
                 List<Protein> founds = parser.Search(proteins, txtPattern.Text, nmbLast.Value, selectedTypes);
 
                 if (founds.Count() > 0)
@@ -215,7 +243,10 @@ namespace parser
                     panel.Name = "pnlResult" + tabMain.TabPages.Count.ToString();
                     panel.Controls.Add(new Label() { Text = "Total Entries: " + founds.Count().ToString(), Dock = DockStyle.Top, AutoSize = false });
                     panel.Controls.Add(new Label() { Text = "Pattern: " + txtPattern.Text, Dock = DockStyle.Top, AutoSize = false });
-                    panel.Controls.Add(new Label() { Text = "Last " + nmbLast.Value.ToString() + " characters", Dock = DockStyle.Top, AutoSize = false });
+                    if (!cbxWholeSeq.Checked)
+                        panel.Controls.Add(new Label() { Text = "Last " + nmbLast.Value.ToString() + " characters", Dock = DockStyle.Top, AutoSize = false });
+                    else
+                        panel.Controls.Add(new Label() { Text = "Whole sequence", Dock = DockStyle.Top, AutoSize = false });
 
                     panel.Controls.Add(new Button { Text = "Analyze Pattern", Dock = DockStyle.Right, AutoSize = true, Name = "btnAnalize" + tabMain.TabPages.Count.ToString() });
                     Button btn3 = (Button)panel.Controls.Find("btnAnalize" + tabMain.TabPages.Count.ToString(), false).FirstOrDefault();
@@ -264,10 +295,12 @@ namespace parser
                 {
                     MessageBox.Show("No results found.");
                 }
+                ShowWaitScreen(false);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Oops. Something wrong happenned :(   " + ex.Message);
+                ShowWaitScreen(false);
                 return;
             }            
 
@@ -387,12 +420,14 @@ namespace parser
             string fName = statusBar.Text + "_features\\features.json";
             if (System.IO.File.Exists(fName))
             {
-                MessageBox.Show("File "+fName+" exists. Please delete the folder and the file first.");
+                MessageBox.Show("File "+fName+" exists. Please rename or delete the folder first.");
                 return;
             }
 
             if (MessageBox.Show("Are you sure you want to retrieve the features for all the proteins?\n\nThis can take signinficant time. Make sure the computer is connected to the Internet.\nPlease do not touch the application until the process is finished.", "CONFIRM!", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 return;
+
+            ShowWaitScreen(true, "Please, wait. This process takes time...");
 
             System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fName));
             FileStream fs = File.Create(fName);
@@ -430,6 +465,8 @@ namespace parser
 
                 progressBar.Value = 0;  
                 statusBar.Text = oldFile;
+
+                ShowWaitScreen(false);
                 MessageBox.Show("The features have been saved to " + fName + ".\n\nPlease re-load the "+fName+" file.");
             }
             catch (Exception ex)
@@ -437,6 +474,7 @@ namespace parser
                 MessageBox.Show("Oops. Something wrong happenned :(   " + ex.Message);
                 fs.Close();
                 statusBar.Text = oldFile;
+                ShowWaitScreen(false);
                 return;
             }
         }
@@ -512,6 +550,21 @@ namespace parser
         {
             if (e.KeyCode == Keys.Enter )
                 button1_Click(sender, e);
+        }
+
+        private void cbxWholeSeq_CheckedChanged(object sender, EventArgs e)
+        {
+            nmbLast.Enabled = !cbxWholeSeq.Checked;
+            if (cbxWholeSeq.Checked)
+            {
+                nmbLast.Minimum = 0;
+                nmbLast.Value = 0;
+            }
+            else
+            {
+                nmbLast.Minimum = 1;
+                nmbLast.Value = 40;
+            }
         }
     }
 }

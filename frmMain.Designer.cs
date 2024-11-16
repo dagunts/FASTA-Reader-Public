@@ -43,12 +43,12 @@
             this.lwTypes = new System.Windows.Forms.ListView();
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbxWholeSeq = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtPattern = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.nmbLast = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +61,10 @@
             this.selectFeatureTypesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.pnlWait = new System.Windows.Forms.Panel();
+            this.lblWait = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -70,6 +74,8 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmbLast)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.pnlWait.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -124,6 +130,7 @@
             // 
             // tabPageFile
             // 
+            this.tabPageFile.Controls.Add(this.pnlWait);
             this.tabPageFile.Controls.Add(this.webMain);
             this.tabPageFile.Controls.Add(this.pnlSearch);
             this.tabPageFile.Location = new System.Drawing.Point(4, 28);
@@ -162,9 +169,9 @@
             this.panel2.Controls.Add(this.lwTypes);
             this.panel2.Controls.Add(this.label4);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(444, 0);
+            this.panel2.Location = new System.Drawing.Point(436, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(656, 85);
+            this.panel2.Size = new System.Drawing.Size(664, 85);
             this.panel2.TabIndex = 9;
             // 
             // lwTypes
@@ -174,7 +181,7 @@
             this.lwTypes.Location = new System.Drawing.Point(0, 18);
             this.lwTypes.MultiSelect = false;
             this.lwTypes.Name = "lwTypes";
-            this.lwTypes.Size = new System.Drawing.Size(656, 67);
+            this.lwTypes.Size = new System.Drawing.Size(664, 67);
             this.lwTypes.TabIndex = 11;
             this.lwTypes.UseCompatibleStateImageBehavior = false;
             this.lwTypes.View = System.Windows.Forms.View.List;
@@ -185,13 +192,14 @@
             this.label4.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(0, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(656, 18);
+            this.label4.Size = new System.Drawing.Size(664, 18);
             this.label4.TabIndex = 10;
             this.label4.Text = "Only the following Feature Types are considered when searching (to change click -" +
     "-Feature Types-- menu)";
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.cbxWholeSeq);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtPattern);
             this.panel1.Controls.Add(this.label3);
@@ -200,8 +208,19 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(444, 85);
+            this.panel1.Size = new System.Drawing.Size(436, 85);
             this.panel1.TabIndex = 7;
+            // 
+            // cbxWholeSeq
+            // 
+            this.cbxWholeSeq.AutoSize = true;
+            this.cbxWholeSeq.Location = new System.Drawing.Point(243, 51);
+            this.cbxWholeSeq.Name = "cbxWholeSeq";
+            this.cbxWholeSeq.Size = new System.Drawing.Size(179, 23);
+            this.cbxWholeSeq.TabIndex = 6;
+            this.cbxWholeSeq.Text = "Search entire sequence";
+            this.cbxWholeSeq.UseVisualStyleBackColor = true;
+            this.cbxWholeSeq.CheckedChanged += new System.EventHandler(this.cbxWholeSeq_CheckedChanged);
             // 
             // label1
             // 
@@ -219,7 +238,7 @@
             this.txtPattern.Location = new System.Drawing.Point(119, 13);
             this.txtPattern.Margin = new System.Windows.Forms.Padding(4);
             this.txtPattern.Name = "txtPattern";
-            this.txtPattern.Size = new System.Drawing.Size(285, 27);
+            this.txtPattern.Size = new System.Drawing.Size(300, 27);
             this.txtPattern.TabIndex = 1;
             this.toolTip1.SetToolTip(this.txtPattern, resources.GetString("txtPattern.ToolTip"));
             this.txtPattern.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtPattern_KeyUp);
@@ -236,6 +255,11 @@
             // nmbLast
             // 
             this.nmbLast.Location = new System.Drawing.Point(119, 47);
+            this.nmbLast.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.nmbLast.Name = "nmbLast";
             this.nmbLast.Size = new System.Drawing.Size(65, 27);
             this.nmbLast.TabIndex = 3;
@@ -253,23 +277,6 @@
             this.label2.Size = new System.Drawing.Size(77, 19);
             this.label2.TabIndex = 4;
             this.label2.Text = "within last";
-            // 
-            // button1
-            // 
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button1.Image = global::parser.Properties.Resources.search;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button1.Location = new System.Drawing.Point(1100, 0);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(124, 85);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Go!";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // menuStrip1
             // 
@@ -352,6 +359,56 @@
             // toolTip1
             // 
             this.toolTip1.AutomaticDelay = 100;
+            this.toolTip1.AutoPopDelay = 10000;
+            this.toolTip1.InitialDelay = 100;
+            this.toolTip1.ReshowDelay = 20;
+            // 
+            // pnlWait
+            // 
+            this.pnlWait.BackColor = System.Drawing.Color.PowderBlue;
+            this.pnlWait.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlWait.Controls.Add(this.pictureBox1);
+            this.pnlWait.Controls.Add(this.lblWait);
+            this.pnlWait.Location = new System.Drawing.Point(85, 402);
+            this.pnlWait.Name = "pnlWait";
+            this.pnlWait.Size = new System.Drawing.Size(351, 175);
+            this.pnlWait.TabIndex = 2;
+            // 
+            // lblWait
+            // 
+            this.lblWait.AutoSize = true;
+            this.lblWait.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWait.Location = new System.Drawing.Point(49, 40);
+            this.lblWait.Name = "lblWait";
+            this.lblWait.Size = new System.Drawing.Size(111, 23);
+            this.lblWait.TabIndex = 0;
+            this.lblWait.Text = "Please wait...";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::parser.Properties.Resources.Wait;
+            this.pictureBox1.Location = new System.Drawing.Point(287, 108);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(61, 64);
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            // 
+            // button1
+            // 
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.button1.Image = global::parser.Properties.Resources.search;
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.Location = new System.Drawing.Point(1100, 0);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(124, 85);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Go!";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // frmMain
             // 
@@ -381,6 +438,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.nmbLast)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.pnlWait.ResumeLayout(false);
+            this.pnlWait.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -418,6 +478,10 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ListView lwTypes;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox cbxWholeSeq;
+        private System.Windows.Forms.Panel pnlWait;
+        private System.Windows.Forms.Label lblWait;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

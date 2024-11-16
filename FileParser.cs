@@ -119,8 +119,12 @@ namespace parser
 
         public string BreakSequence(int n)
         {
-            if (Sequence.Length < n)
-                return Sequence;
+            int k = 1;
+            if (n == 0 || Sequence.Length < n)
+            {
+                n = Sequence.Length;
+                k = 0;
+            }
 
             string result = Sequence.Substring(Sequence.Length - n);
 
@@ -128,7 +132,10 @@ namespace parser
             {
                 result = result.Substring(0, FoundSequences[i].Start) + "<span style='background-color:#aee500;border-left:1px solid #444; border-right:1px solid #444;'>" + FoundSequences[i].Value + "</span>" + result.Substring(FoundSequences[i].End);
             }
-            return " ... " + result;
+            if (k == 0)
+                return result;
+            else
+                return " ... " + result;
         }
 
         public string BreakSequence()
@@ -217,7 +224,7 @@ namespace parser
             foreach (Protein protein in proteins)
             {
                 var seq = protein.Sequence;
-                if (protein.Sequence.Length > (int)n)
+                if (protein.Sequence.Length > (int)n && n>0)
                     seq = protein.Sequence.Substring(protein.Sequence.Length - (int)n);
 
                 if (seq.Contains(text))
@@ -234,10 +241,15 @@ namespace parser
             foreach (string type in selectedTypes)
                 featureTypes += type + ", ";
             featureTypes = featureTypes.Trim().Trim(',');
+            string what = "last "+n.ToString();
+            if (n==0)
+            {
+                what = "all";
+            }
 
             StringBuilder sb = new StringBuilder();
             sb.Append("<html><body style='font-family:Calibri; font-size:12pt;'><table style='width:100%;border:1px;'>");
-            sb.Append("<div style='background-color:#B0E0E6;height:64px;'>Found Entries: " + proteins.Count().ToString()+ "<br/>Searched last "+n.ToString()+" characters; Pattern " + ptrn + 
+            sb.Append("<div style='background-color:#B0E0E6;height:64px;'>Found Entries: " + proteins.Count().ToString()+ "<br/>Searched "+ what +" characters; Pattern " + ptrn + 
                 "<br/>Considered Feature Types: " + featureTypes +
                 "</div><div style='overflow-y:scroll;'>");
             foreach (Protein protein in proteins)
@@ -306,9 +318,9 @@ namespace parser
             {
                 if (string.IsNullOrEmpty(protein.Sequence))
                     return false;
-
+                
                 var text = protein.Sequence;
-                if (protein.Sequence.Length > (int)n)
+                if (n>0 && protein.Sequence.Length > (int)n)
                     text = protein.Sequence.Substring(protein.Sequence.Length - (int)n);
                 long delta = protein.Sequence.Length - text.Length;
 
